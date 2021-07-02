@@ -2,7 +2,13 @@ package com.cinpe.searchimg.model;
 
 import android.net.Uri;
 
+import androidx.databinding.Bindable;
 import androidx.databinding.ObservableField;
+import androidx.databinding.ObservableInt;
+import androidx.databinding.ObservableLong;
+import androidx.room.ColumnInfo;
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
 
 /**
  * @description: 描述
@@ -14,7 +20,8 @@ import androidx.databinding.ObservableField;
  **/
 public class BaseModel {
 
-
+    @PrimaryKey
+    public ObservableLong uId=new ObservableLong();
 
 
     public ObservableField<String> name=new ObservableField<>();

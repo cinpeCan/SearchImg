@@ -2,7 +2,11 @@ package com.cinpe.searchimg;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.databinding.ObservableField;
+import androidx.lifecycle.AndroidViewModel;
+import androidx.lifecycle.ViewModel;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
+import androidx.room.Room;
 
 import android.content.ComponentName;
 import android.content.Context;
@@ -25,22 +29,29 @@ import com.cinpe.searchimg.model.MainBean;
 import com.cinpe.searchimg.model.MainModel;
 import com.cinpe.searchimg.net.ObserverImpl;
 import com.cinpe.searchimg.service.MainService;
+import com.cinpe.searchimg.sqlite.AppDatabase;
+import com.cinpe.searchimg.sqlite.User;
+import com.cinpe.searchimg.sqlite.UserDao;
 import com.scwang.smart.refresh.layout.api.RefreshLayout;
 import com.scwang.smart.refresh.layout.listener.OnLoadMoreListener;
 import com.scwang.smart.refresh.layout.listener.OnRefreshListener;
+
+import java.util.List;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
 public class MainActivity extends RxBaseActivity<ActivityMainBinding> implements MainControl {
 
-
+    /**
+     * 数据库
+     */
+    AppDatabase db;
 
     @Override
     public int getLayoutId() {
         return R.layout.activity_main;
     }
-
 
 
     /**
@@ -53,12 +64,12 @@ public class MainActivity extends RxBaseActivity<ActivityMainBinding> implements
 
             aidlInterface = AidlInterface.Stub.asInterface(service);
 
-            Log.d(TAG,"onServiceConnected");
+            Log.d(TAG, "onServiceConnected");
 
             try {
-                int a = aidlInterface.basicTypes(1, 3L, true, 3.6f, 6.7d,"666");
+                int a = aidlInterface.basicTypes(1, 3L, true, 3.6f, 6.7d, "666");
 
-                Log.d(TAG,"服务中打印:"+a);
+                Log.d(TAG, "服务中打印:" + a);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -67,7 +78,7 @@ public class MainActivity extends RxBaseActivity<ActivityMainBinding> implements
 
         @Override
         public void onServiceDisconnected(ComponentName name) {
-            Log.d(TAG,"onServiceDisconnected");
+            Log.d(TAG, "onServiceDisconnected");
         }
     };
 
@@ -88,7 +99,7 @@ public class MainActivity extends RxBaseActivity<ActivityMainBinding> implements
         mBinding.refreshLayout.setOnLoadMoreListener(new OnLoadMoreListener() {
             @Override
             public void onLoadMore(@NonNull RefreshLayout refreshLayout) {
-                mBinding.getModel().index.set(mBinding.getModel().index.get()+1);
+                mBinding.getModel().index.set(mBinding.getModel().index.get() + 1);
                 requestSearch();
             }
         });
@@ -122,6 +133,8 @@ public class MainActivity extends RxBaseActivity<ActivityMainBinding> implements
         mBinding.getModel().list.clear();
         mBinding.getModel().index.set(0);
         requestSearch();
+
+        testBD();
 
     }
 
@@ -211,9 +224,9 @@ public class MainActivity extends RxBaseActivity<ActivityMainBinding> implements
 
                         mBinding.refreshLayout.finishRefresh();
 
-                        if(p.getList()==null||p.getList().isEmpty()){
+                        if (p.getList() == null || p.getList().isEmpty()) {
                             mBinding.refreshLayout.finishLoadMoreWithNoMoreData();
-                        }else {
+                        } else {
                             mBinding.refreshLayout.finishLoadMore();
                         }
 
@@ -222,6 +235,44 @@ public class MainActivity extends RxBaseActivity<ActivityMainBinding> implements
     }
 
     /**
-     *
+     * 数据库测试
      */
+    public void testBD() {
+
+        //获取数据库实例.
+
+        db = AppDatabase.getInstance();
+
+
+        UserDao dao = db.userDao();
+
+        List<User> list = dao.getAll();
+
+        System.out.println("[哼哈]list" + list);
+        if (list != null) {
+            System.out.println("[哼哈]list.size" + list.size());
+
+            User user = new User();
+
+            user.firstName.set("哼" + list.size());
+            user.lastName.set("哈" + list.size());
+
+            dao.insert(user);
+        }
+
+
+        List<User> list2 = dao.getAll();
+
+        System.out.println("[哼哈]list2" + list2);
+        if (list2 != null) {
+            System.out.println("[哼哈]list2.size" + list2.size());
+
+            for (User user1 :
+                    list2) {
+                System.out.println("[哼哈]id" + user1.uid.get() + ",firstName:" + user1.firstName.get() + ",lastName:" + user1.lastName.get());
+            }
+        }
+
+
+    }
 }

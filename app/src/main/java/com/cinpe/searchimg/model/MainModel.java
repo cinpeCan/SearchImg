@@ -12,6 +12,7 @@ import androidx.databinding.ObservableList;
  * @version: 1.00
  * @tips: 补充/提示
  **/
+
 public class MainModel extends BaseModel{
 
     /**
