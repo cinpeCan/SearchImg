@@ -6,9 +6,13 @@
     
     <data>
         
+        <!--<variable-->
+        <!--    name="model"-->
+        <!--    type="com.cinpe.searchimg.model.MainModel"/>-->
+    
         <variable
             name="model"
-            type="com.cinpe.searchimg.model.MainModel"/>
+            type="com.cinpe.searchimg.repository.MyRepository"/>
         
         <variable
             name="control"
@@ -83,7 +87,7 @@
             <!--    app:layout_constraintEnd_toEndOf="parent"-->
             <!--    app:layout_constraintBottom_toBottomOf="parent"/>-->
             
-            三个球
+            <!--三个球-->
             <View
                 android:id="@+id/ball_0"
                 android:layout_width="80dp"
@@ -156,7 +160,7 @@
                     android:imeOptions="actionSearch"
                     android:paddingStart="6dp"
                     android:singleLine="true"
-                    android:text="@={model.name}"
+                    android:text="@={model.searchStr}"
                     android:textSize="14sp"/>
         
         

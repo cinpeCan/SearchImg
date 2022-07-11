@@ -4,6 +4,8 @@ import androidx.databinding.ObservableArrayList;
 import androidx.databinding.ObservableInt;
 import androidx.databinding.ObservableList;
 
+import com.cinpe.searchimg.database.model.BaseModel;
+
 /**
  * @description: 描述
  * @author: Cinpecan
@@ -12,7 +14,6 @@ import androidx.databinding.ObservableList;
  * @version: 1.00
  * @tips: 补充/提示
  **/
-
 public class MainModel extends BaseModel{
 
     /**

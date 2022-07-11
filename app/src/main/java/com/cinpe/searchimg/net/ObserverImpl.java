@@ -2,9 +2,9 @@ package com.cinpe.searchimg.net;
 
 import android.util.Log;
 
+import io.reactivex.rxjava3.core.Observer;
+import io.reactivex.rxjava3.disposables.Disposable;
 
-import io.reactivex.Observer;
-import io.reactivex.disposables.Disposable;
 
 /**
  * @description: 描述

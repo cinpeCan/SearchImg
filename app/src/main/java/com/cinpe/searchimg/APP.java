@@ -4,14 +4,19 @@ import android.app.Application;
 
 import com.cinpe.searchimg.net.API;
 import com.cinpe.searchimg.net.ServerApi;
+import com.orhanobut.logger.AndroidLogAdapter;
+import com.orhanobut.logger.FormatStrategy;
+import com.orhanobut.logger.Logger;
+import com.orhanobut.logger.PrettyFormatStrategy;
 
 
 import java.util.concurrent.TimeUnit;
 
+import dagger.hilt.android.HiltAndroidApp;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
-import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
+import retrofit2.adapter.rxjava3.RxJava3CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
@@ -22,6 +27,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
  * @version: 1.00
  * @tips: 补充/提示
  **/
+@HiltAndroidApp
 public class APP extends Application {
 
     public static APP getsInstance() {
@@ -47,6 +53,16 @@ public class APP extends Application {
         super.onCreate();
 
         sInstance=this;
+
+        FormatStrategy formatStrategy = PrettyFormatStrategy.newBuilder()
+                .showThreadInfo(false)  // (Optional) Whether to show thread info or not. Default true
+                .methodCount(0)         // (Optional) How many method line to show. Default 2
+                .methodOffset(0)        // (Optional) Hides internal method calls up to offset. Default 5
+                //.logStrategy(customLog) // (Optional) Changes the log strategy to print out. Default LogCat
+                .tag("logger")   // (Optional) Global tag for every log. Default PRETTY_LOGGER
+                .build();
+
+        Logger.addLogAdapter(new AndroidLogAdapter(formatStrategy));
 
         //初始化Retrofit
         InitNet();
@@ -80,7 +96,7 @@ public class APP extends Application {
         //启动Retrofit
         retrofit = new Retrofit.Builder()
                 .baseUrl(API.API)
-                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+                .addCallAdapterFactory(RxJava3CallAdapterFactory.create())
                 .addConverterFactory(GsonConverterFactory.create())
                 .client(client)
                 .build();

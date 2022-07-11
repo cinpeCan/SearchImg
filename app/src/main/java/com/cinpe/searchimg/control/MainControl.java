@@ -2,8 +2,6 @@ package com.cinpe.searchimg.control;
 
 import android.view.View;
 
-import com.cinpe.searchimg.model.BaseModel;
-
 /**
  * @description: 描述
  * @author: Cinpecan

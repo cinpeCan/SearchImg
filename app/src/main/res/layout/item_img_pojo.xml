@@ -6,10 +6,26 @@
     <data>
         
         <variable
-            name="model"
-            type="com.cinpe.searchimg.database.model.BaseModel"/>
+            name="pojo"
+            type="com.cinpe.searchimg.repository.ItemData&lt;BasePojo>"/>
+        
+        
+        <!--<variable-->
+        <!--    name="name"-->
+        <!--    type="androidx.lifecycle.MutableLiveData&lt;String>"/>-->
     
-
+        <!--<variable-->
+        <!--    name="vmPojo"-->
+        <!--    type="com.cinpe.searchimg.repository.ItemViewModel"/>-->
+        
+        
+        <variable
+            name="group"
+            type="com.cinpe.searchimg.repository.GroupData&lt;BasePojo>"/>
+        
+        <import type="com.cinpe.searchimg.database.model.BasePojo"/>
+        
+        <import type="androidx.lifecycle.Transformations"/>
     
     </data>
     
@@ -17,12 +33,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/trans">
-    
-        <!--bind.src="@{model.imageUri}"-->
+        
+        
         <ImageView
             android:id="@+id/img"
+            bind.src="@{pojo.imageUri}"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:padding="2dp"
             android:scaleType="centerCrop"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -31,18 +49,19 @@
         
         
         <!--标题-->
-        <TextView
+        <EditText
+            android:id="@+id/title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:text="@{model.name,default=`测试`}"
-            android:textSize="12sp"
-            android:singleLine="true"
             android:maxWidth="60dp"
+            android:singleLine="true"
+            android:text="@={pojo.name,default=`测试`}"
             android:textColor="@color/white"
+            android:textSize="12sp"
+            app:layout_constraintBottom_toBottomOf="@id/img"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintBottom_toBottomOf="@id/img"/>
+            app:layout_constraintStart_toStartOf="parent"/>
     
     
     </androidx.constraintlayout.widget.ConstraintLayout>

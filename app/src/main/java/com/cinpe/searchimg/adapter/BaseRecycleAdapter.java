@@ -1,6 +1,8 @@
 package com.cinpe.searchimg.adapter;
 
 import android.content.Context;
+import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
@@ -10,12 +12,16 @@ import androidx.databinding.ObservableArrayList;
 import androidx.databinding.ObservableInt;
 import androidx.databinding.ObservableList;
 import androidx.databinding.ViewDataBinding;
+import androidx.recyclerview.widget.AsyncListDiffer;
+import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
 
+import com.cinpe.searchimg.database.model.BaseModel;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 
 /**
@@ -37,9 +43,41 @@ public abstract class BaseRecycleAdapter<T extends ViewDataBinding> extends Recy
     //如果是单选, 记录被选中的选项.
     public ObservableInt indexList = null;
 
+    private AsyncListDiffer<BaseModel> mDiffer;
+
 
     //偏移量(例如有头部item)
     public int offset = 0;
+
+    private final DiffUtil.ItemCallback<BaseModel> DIFF_CALLBACK = new DiffUtil.ItemCallback<BaseModel>() {
+
+
+        @Override
+        public boolean areItemsTheSame(@NonNull BaseModel oldItem, @NonNull BaseModel newItem) {
+            return oldItem.uId.equals(newItem.uId);
+        }
+
+        @Override
+        public boolean areContentsTheSame(@NonNull BaseModel oldItem, @NonNull BaseModel newItem) {
+            return oldItem.getImageUri().equals(newItem.getImageUri());
+        }
+
+
+        @Override
+        public Object getChangePayload(@NonNull BaseModel oldItem, @NonNull BaseModel newItem) {
+
+            Bundle bundle = new Bundle();
+
+            if (!TextUtils.equals(oldItem.getName(), newItem.getName())) {
+                bundle.putString("name", newItem.getName());
+            }
+            if (!Objects.equals(oldItem.getImageUri(), newItem.getImageUri())) {
+                bundle.putString("imageUri", newItem.getImageUri().toString());
+            }
+            return bundle;
+
+        }
+    };
 
 
     //list的绑定监听
@@ -139,13 +177,12 @@ public abstract class BaseRecycleAdapter<T extends ViewDataBinding> extends Recy
         this.mItemLayout = mItemLayout;
         this.list = mList;
         this.indexList = mIndexList;
-
+        mDiffer = new AsyncListDiffer<>(this, DIFF_CALLBACK);
         ////单选绑定
         //if (this.indexList != null) {
         //    //默认单选
         //    bindSingleSelect();
         //}
-
 
         init();
     }

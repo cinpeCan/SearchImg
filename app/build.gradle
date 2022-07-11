@@ -1,5 +1,7 @@
 plugins {
     id 'com.android.application'
+    id 'dagger.hilt.android.plugin'
+    id 'androidx.navigation.safeargs'
 }
 
 android {
@@ -31,38 +33,195 @@ android {
 }
 
 dependencies {
+    implementation 'androidx.appcompat:appcompat:1.3.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.0'
+    testImplementation 'junit:junit:4.13.2'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.3'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
 
-    implementation 'androidx.appcompat:appcompat:1.2.0'
-    implementation 'com.google.android.material:material:1.2.1'
-    implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
-    testImplementation 'junit:junit:4.+'
-    implementation 'com.scwang.smart:refresh-layout-kernel:2.0.3'
-    implementation 'com.scwang.smart:refresh-header-classics:2.0.3'
-    implementation 'com.scwang.smart:refresh-footer-classics:2.0.3'
-    androidTestImplementation 'androidx.test.ext:junit:1.1.1'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+    testImplementation "androidx.arch.core:core-testing:$arch_version"
+    androidTestImplementation 'com.android.support.test:rules:1.2.0'
 
-    implementation 'io.reactivex.rxjava2:rxjava:2.2.12'
-    implementation 'io.reactivex.rxjava2:rxandroid:2.1.1'
-    implementation 'com.squareup.retrofit2:retrofit:2.8.1'
-    implementation 'com.squareup.retrofit2:converter-gson:2.8.1' // 请求体转换工厂
-    implementation 'com.squareup.retrofit2:adapter-rxjava2:2.5.0' // 必要依赖，和Rxjava结合必须用到
-    implementation 'com.squareup.okhttp3:logging-interceptor:3.13.1' //非必要依赖,打印okhttp的Log
-    implementation 'com.github.bumptech.glide:glide:4.9.0'
-    annotationProcessor 'com.github.bumptech.glide:compiler:4.5.0'
-    implementation 'com.fasterxml.jackson.core:jackson-annotations:2.12.1'
+    implementation 'commons-io:commons-io:2.6'
+    androidTestImplementation "androidx.test:runner:1.4.0"
+    androidTestUtil "androidx.test:orchestrator:$orchestrator"
+
+    //recyclerview
+    implementation "androidx.recyclerview:recyclerview:$recyclerViewVersion"
+
+    //RxJava3
+//    implementation "io.reactivex.rxjava3:rxjava:$rxjavaVersion"
+    implementation "io.reactivex.rxjava3:rxandroid:$rxjavaVersion"
+
+//    //Rxlifecycle
+    implementation 'com.trello.rxlifecycle3:rxlifecycle-android:3.1.0'  //自动释放广播注册
+    implementation 'com.trello.rxlifecycle3:rxlifecycle-components:3.1.0'
+
+    //retrofit
+    implementation "com.squareup.retrofit2:retrofit:$retrofitVersion"
+    implementation "com.squareup.retrofit2:converter-gson:$retrofitVersion" // 请求体转换工厂
+    implementation "com.squareup.retrofit2:adapter-rxjava3:$retrofitVersion" // 必要依赖，和Rxjava结合必须用到
+    implementation 'com.squareup.okhttp3:logging-interceptor:4.7.2' //非必要依赖,打印okhttp的Log
+
+//    //多dex的Application基类
+//    implementation 'com.android.support:multidex:1.0.3'
+
+    //屏幕自动适配
+    implementation 'me.jessyan:autosize:1.2.1'
+
+    //权限请求库
+    implementation 'com.github.tbruyelle:rxpermissions:0.12'
+
+    //图片加载库
+    implementation 'com.github.bumptech.glide:glide:4.11.0'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.10.0'
+
+    //recyclerView的item排满后自动换行:https://www.anttoweb.com/kb/recyclerview%e7%9a%84item%e6%8e%92%e6%bb%a1%e5%90%8e%e8%87%aa%e5%8a%a8%e6%8d%a2%e8%a1%8c/
     implementation 'com.beloo.widget:ChipsLayoutManager:0.3.7@aar'
 
+    //翻页GridLayout
+    implementation 'com.github.mtjsoft:GridPager:v3.6.0'/*高度集成*/
+    implementation 'com.github.MasonLiuChn:GridViewPager:1.0.3'/*page页内adapter留白*/
 
-    def room_version = "2.3.0"
+    //谷歌工具
+    implementation 'com.google.guava:guava:30.1.1-android'
+    //阴影实现的依赖
+    implementation 'com.github.lihangleo2:ShadowLayout:3.1.6'/*https://github.com/lihangleo2/ShadowLayout.git*/
 
-    implementation "androidx.room:room-runtime:$room_version"
-    annotationProcessor "androidx.room:room-compiler:$room_version"
+    //刷新头.
+    implementation  "com.scwang.smart:refresh-layout-kernel:$smartRefresh"      //核心必须依赖
+    implementation  "com.scwang.smart:refresh-header-classics:$smartRefresh"    //经典刷新头
+    implementation  "com.scwang.smart:refresh-header-radar:$smartRefresh"       //雷达刷新头
+    implementation  "com.scwang.smart:refresh-header-falsify:$smartRefresh"     //虚拟刷新头
+    implementation  "com.scwang.smart:refresh-header-material:$smartRefresh"    //谷歌刷新头
+    implementation  "com.scwang.smart:refresh-header-two-level:$smartRefresh"   //二级刷新头
+    implementation  "com.scwang.smart:refresh-footer-ball:$smartRefresh"        //球脉冲加载
+    implementation  "com.scwang.smart:refresh-footer-classics:$smartRefresh"    //经典加载
 
-    // optional - RxJava support for Room
-    implementation "androidx.room:room-rxjava2:$room_version"
+    //谷歌图片处理框架
+    implementation 'com.google.android.material:material:1.4.0'
+
+    //bean注解包
+    implementation 'com.fasterxml.jackson.core:jackson-annotations:2.12.1'
+
+    // Lombok
+    compileOnly "org.projectlombok:lombok:$lombok_version"
+    annotationProcessor "org.projectlombok:lombok:$lombok_version"
+    testCompileOnly "org.projectlombok:lombok:$lombok_version"
+    testAnnotationProcessor "org.projectlombok:lombok:$lombok_version"
+
+    //room的支持.
+    implementation "androidx.room:room-runtime:$roomVersion"
+    annotationProcessor "androidx.room:room-compiler:$roomVersion"
+
+    // optional - RxJava3 support for Room
+    implementation "androidx.room:room-rxjava3:$roomVersion"
 
     // optional - Guava support for Room, including Optional and ListenableFuture
-    implementation "androidx.room:room-guava:$room_version"
+    implementation "androidx.room:room-guava:$roomVersion"
 
+    // optional - Test helpers
+    testImplementation "androidx.room:room-testing:$roomVersion"
+
+
+    // ViewModel的支持
+    implementation "androidx.lifecycle:lifecycle-viewmodel:$lifecycleVersion"
+    // LiveData
+    implementation "androidx.lifecycle:lifecycle-livedata:$lifecycleVersion"
+    // Lifecycles only (without ViewModel or LiveData)
+    implementation "androidx.lifecycle:lifecycle-runtime:$lifecycleVersion"
+
+    // Saved state module for ViewModel
+    implementation "androidx.lifecycle:lifecycle-viewmodel-savedstate:$lifecycleVersion"
+
+    implementation "androidx.lifecycle:lifecycle-common-java8:$lifecycleVersion"
+
+    // optional - helpers for implementing LifecycleOwner in a Service
+    implementation "androidx.lifecycle:lifecycle-service:$lifecycleVersion"
+
+    // optional - ProcessLifecycleOwner provides a lifecycle for the whole application process
+    implementation "androidx.lifecycle:lifecycle-process:$lifecycleVersion"
+
+    // optional - ReactiveStreams support for LiveData
+    implementation "androidx.lifecycle:lifecycle-reactivestreams:$lifecycleVersion"
+
+    // optional - Test helpers for LiveData
+    testImplementation "androidx.arch.core:core-testing:$archVersion"
+
+
+
+    // navigation
+    implementation "androidx.navigation:navigation-fragment:$navigationVersion"
+    implementation "androidx.navigation:navigation-ui:$navigationVersion"
+
+    // Feature module Support
+    implementation "androidx.navigation:navigation-dynamic-features-fragment:$navigationVersion"
+
+    // Testing Navigation
+    androidTestImplementation "androidx.navigation:navigation-testing:$navigationVersion"
+
+    // Jetpack Compose Integration
+    implementation "androidx.navigation:navigation-compose:$navigationVersion"
+
+    // (Java only)
+    implementation "androidx.work:work-runtime:$workVersion"
+    // optional - RxJava3 support
+    implementation "androidx.work:work-rxjava3:$workVersion"
+    // optional - Test helpers
+    androidTestImplementation "androidx.work:work-testing:$workVersion"
+    // optional - Multiprocess support
+    implementation "androidx.work:work-multiprocess:$workVersion"
+
+
+    // 注入
+    implementation "com.google.dagger:hilt-android:$hiltVersion"
+    implementation "androidx.hilt:hilt-lifecycle-viewmodel:$lifecycleHiltVersion"
+    annotationProcessor "androidx.hilt:hilt-compiler:$lifecycleHiltVersion"
+
+    // For instrumented tests.
+    testImplementation "com.google.dagger:hilt-android-testing:$hiltVersion"
+    testAnnotationProcessor "com.google.dagger:hilt-android-compiler:$hiltVersion"
+//    androidTestImplementation "com.google.dagger:hilt-android-testing:$hiltVersion"
+    androidTestAnnotationProcessor "com.google.dagger:hilt-android-compiler:$hiltVersion"
+
+    androidTestImplementation "com.google.dagger:hilt-android-testing:$hiltVersion"
+    annotationProcessor "com.google.dagger:hilt-android-compiler:$hiltVersion"
+
+    //autoValue
+    compileOnly "com.google.auto.value:auto-value-annotations:$autoValueVersion"
+    annotationProcessor "com.google.auto.value:auto-value:$autoValueVersion"
+
+//    // Optionally for TypeAdapter support
+//    annotationProcessor 'com.ryanharter.auto.value:auto-value-parcel:0.2.9'
+//    implementation 'com.ryanharter.auto.value:auto-value-parcel-adapter:0.2.9'
+
+    //log优化.
+    implementation 'com.orhanobut:logger:2.2.0'
+
+    //Navigation
+    implementation "androidx.navigation:navigation-fragment:$nav_version"
+    implementation "androidx.navigation:navigation-ui:$nav_version"
+    // Feature module Support
+    implementation "androidx.navigation:navigation-dynamic-features-fragment:$nav_version"
+    // Testing Navigation
+    androidTestImplementation "androidx.navigation:navigation-testing:$nav_version"
+    // Jetpack Compose Integration
+    implementation "androidx.navigation:navigation-compose:$nav_version"
+
+
+
+    implementation "com.jakewharton.rxbinding4:rxbinding:$rxbind"
+    implementation "com.jakewharton.rxbinding4:rxbinding-core:$rxbind"
+    implementation "com.jakewharton.rxbinding4:rxbinding-appcompat:$rxbind"
+    implementation "com.jakewharton.rxbinding4:rxbinding-drawerlayout:$rxbind"
+    implementation "com.jakewharton.rxbinding4:rxbinding-leanback:$rxbind"
+    implementation "com.jakewharton.rxbinding4:rxbinding-recyclerview:$rxbind"
+    implementation "com.jakewharton.rxbinding4:rxbinding-slidingpanelayout:$rxbind"
+    implementation "com.jakewharton.rxbinding4:rxbinding-swiperefreshlayout:$rxbind"
+    implementation "com.jakewharton.rxbinding4:rxbinding-viewpager:$rxbind"
+    implementation "com.jakewharton.rxbinding4:rxbinding-viewpager2:$rxbind"
+    implementation "com.jakewharton.rxbinding4:rxbinding-material:$rxbind"
+
+
+    implementation "com.cinpe.deponder:deponder:v-0.01"
 }
